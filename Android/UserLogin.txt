@@ -1,0 +1,83 @@
+activity.xml
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/txtUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Username"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:background="@android:drawable/edit_text"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray" />
+
+    <EditText
+        android:id="@+id/txtPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Password"
+        android:inputType="textPassword"
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:background="@android:drawable/edit_text"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray" />
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login" />
+</LinearLayout>
+
+Mainactivity.java
+package com.example.myapplication;
+
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class Mainactivity extends AppCompatActivity {
+
+    String a = "Priyanshi";
+    String pwd = "priyu";
+
+    EditText b;
+    EditText c;
+    Button btnSubmit;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity);
+
+        b = findViewById(R.id.txtUsername);
+        c = findViewById(R.id.txtPassword);
+        btnSubmit = findViewById(R.id.btnSubmit);
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String enteredUser = b.getText().toString();
+                String enteredPass = c.getText().toString();
+
+                if (enteredUser.equals(a) && enteredPass.equals(pwd)) {
+                    Toast.makeText(Mainactivity.this, "Value Match", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(Mainactivity.this, "Value Mismatch", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+}

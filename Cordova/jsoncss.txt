@@ -1,0 +1,94 @@
+index.html
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, please refer to the docs:
+            https://cordova.apache.org/docs/en/latest/
+        Some notes:
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
+        <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="css/style.css">
+        <title>Hello World</title>
+    </head>
+    <body>
+        <div class="app">
+            <p>Hello World</p>
+            <p>My Name is Priyanshi TYBSCIT058</p>
+            <button onclick="loadData()">Load Data</button>
+            <div id="output">
+                <p></p>Fetch the data</p>
+            </div>
+        </div>
+        
+        <script src="cordova.js"></script>
+        <script src="js/index.js"></script>
+    </body>
+</html>
+
+index.js
+function loadData(){
+    var xhr=new XMLHttpRequest();
+    xhr.open("GET","data.json",true);
+    xhr.onreadystatechange=function(){
+        if(xhr.readyState===4 && xhr.status===200){
+            var res=JSON.parse(xhr.responseText);
+            document.getElementById("output").innerHTML=res.message;
+        }
+    };
+    xhr.send();
+}
+
+config.xml
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.example.helloworld1" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    
+    <name>HelloWorldApp1</name>
+    <description>Sample Apache Cordova App</description>
+    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
+        Apache Cordova Team
+    </author>
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <access origin="https://trusted.cdn.com"/>
+</widget>
+
+data.json
+{"message":"I love KC College.Data loaded successfully."}
+
+style.css
+body{
+    font-family: 'Courier New', Courier, monospace;
+    background:#f4f4f9;
+    text-align: center;
+    margin: 0;
+    padding:0;
+}
+h1{
+    color:#333;
+}
+button{
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+button:hover{
+    background-color: #0056b3;
+}
+#output{
+    margin-top: 20px;
+    font-size: 18px;
+    color:#444;
+}
+

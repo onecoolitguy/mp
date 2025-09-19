@@ -1,0 +1,206 @@
+home.page.html
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>User Login Form</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <form (ngSubmit)="login()">
+    <ion-item>
+      <ion-label position="floating">Full Name</ion-label>
+      <ion-input type="text" [(ngModel)]="account.name" name="name" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Age</ion-label>
+      <ion-input type="number" [(ngModel)]="account.age" name="age" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Email Address</ion-label>
+      <ion-input type="email" [(ngModel)]="account.email" name="email" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Phone Number</ion-label>
+      <ion-input type="tel" [(ngModel)]="account.phone" name="phone"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">User ID</ion-label>
+      <ion-input type="text" [(ngModel)]="account.username" name="username" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Secret Key</ion-label>
+      <ion-input type="password" [(ngModel)]="account.password" name="password" required></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" color="secondary" class="ion-margin-top">
+      Sign In
+    </ion-button>
+  </form>
+</ion-content>
+
+home.page.scss
+ion-toolbar {
+  --background: #4a90e2;
+  --color: white;
+}
+
+form {
+  ion-item {
+    margin-bottom: 10px;
+  }
+}
+
+ion-button {
+  font-weight: bold;
+}
+
+home.page.ts
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: 'home.page.html',
+  styleUrls: ['home.page.scss'],
+  standalone: false,
+})
+export class HomePage {
+  account = { name: '', age: '', email: '', phone: '', username: '', password: '' };
+
+  validUser = "priyanshi";
+  validPass = "1234";
+
+  constructor(private router: Router, private alertCtrl: AlertController) {}
+
+  async login() {
+    if (this.account.username === this.validUser && this.account.password === this.validPass) {
+      const alert = await this.alertCtrl.create({
+        header: 'Welcome!',
+        message: 'Login successful. Redirecting...',
+        buttons: [
+          {
+            text: 'Continue',
+            handler: () => {
+              this.router.navigate(['/details'], { queryParams: this.account });
+            }
+          }
+        ]
+      });
+      await alert.present();
+    } else {
+      const alert = await this.alertCtrl.create({
+        header: 'Access Denied',
+        message: 'Incorrect credentials. Please try again.',
+        buttons: ['Okay']
+      });
+      await alert.present();
+    }
+  }
+}
+
+app-routing.module.ts
+import { NgModule } from '@angular/core';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+  },
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'details',
+    loadChildren: () => import('./details/details.module').then(m => m.DetailsPageModule)
+  },
+  {
+    path: 'details',
+    loadChildren: () => import('./details/details.module').then( m => m.DetailsPageModule)
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+
+details.page.html
+<ion-header [translucent]="true">
+  <ion-toolbar color="tertiary">
+    <ion-title>User Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Profile Information</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Name:</strong> {{ info.name }}</p>
+      <p><strong>Age:</strong> {{ info.age }}</p>
+      <p><strong>Email:</strong> {{ info.email }}</p>
+      <p><strong>Phone:</strong> {{ info.phone }}</p>
+      <p><strong>Username:</strong> {{ info.username }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Click Counter</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>You clicked: {{ count }} times</p>
+      <ion-button color="success" (click)="increment()">Add Click</ion-button>
+      <ion-button color="danger" (click)="reset()">Reset</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" color="medium" routerLink="/home">
+    Back to Login
+  </ion-button>
+</ion-content>
+
+details.page.ts
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-details',
+  templateUrl: './details.page.html',
+  styleUrls: ['./details.page.scss'],
+  standalone: false,
+})
+export class DetailsPage {
+  info = { name: '', age: '', email: '', phone: '', username: '' };
+  count = 0;
+
+  constructor(private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      this.info.name = params['name'];
+      this.info.age = params['age'];
+      this.info.email = params['email'];
+      this.info.phone = params['phone'];
+      this.info.username = params['username'];
+    });
+  }
+
+  increment() {
+    this.count += 2; // increment by 2 instead of 1
+  }
+
+  reset() {
+    this.count = 0;
+  }
+}
+

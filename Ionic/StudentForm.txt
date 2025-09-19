@@ -1,0 +1,266 @@
+home.page.html
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">
+      Student Registration Form
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">Fill Your Details</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form (ngSubmit)="goToDetails()" #studentForm="ngForm">
+
+        <ion-item>
+          <ion-label position="stacked">Name</ion-label>
+          <ion-input type="text" [(ngModel)]="student.name" name="name" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Roll No</ion-label>
+          <ion-input type="text" [(ngModel)]="student.rollNo" name="rollNo" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Age</ion-label>
+          <ion-input type="number" [(ngModel)]="student.age" name="age" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Date of Birth</ion-label>
+          <ion-input type="date" [(ngModel)]="student.dob" name="dob" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">City</ion-label>
+          <ion-input type="text" [(ngModel)]="student.city" name="city" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>State</ion-label>
+          <ion-select [(ngModel)]="student.state" name="state" placeholder="Select State">
+            <ion-select-option value="Maharashtra">Maharashtra</ion-select-option>
+            <ion-select-option value="Karnataka">Karnataka</ion-select-option>
+            <ion-select-option value="Gujarat">Gujarat</ion-select-option>
+            <ion-select-option value="Delhi">Delhi</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Country</ion-label>
+          <ion-select [(ngModel)]="student.country" name="country" placeholder="Select Country">
+            <ion-select-option value="India">India</ion-select-option>
+            <ion-select-option value="USA">USA</ion-select-option>
+            <ion-select-option value="UK">UK</ion-select-option>
+            <ion-select-option value="Canada">Canada</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-list>
+          <ion-list-header>
+            <ion-label>Gender</ion-label>
+          </ion-list-header>
+          <ion-radio-group [(ngModel)]="student.gender" name="gender" required>
+            <ion-item>
+              <ion-label>Male</ion-label>
+              <ion-radio slot="start" value="Male"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Female</ion-label>
+              <ion-radio slot="start" value="Female"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+
+        <ion-list>
+          <ion-list-header>
+            <ion-label>Hobbies</ion-label>
+          </ion-list-header>
+          <ion-item>
+            <ion-label>Gaming</ion-label>
+            <ion-checkbox slot="start" [(ngModel)]="student.hobbies.gaming" name="hobbyGaming"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Sports</ion-label>
+            <ion-checkbox slot="start" [(ngModel)]="student.hobbies.sports" name="hobbySports"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Coding</ion-label>
+            <ion-checkbox slot="start" [(ngModel)]="student.hobbies.coding" name="hobbyCoding"></ion-checkbox>
+          </ion-item>
+        </ion-list>
+
+        <ion-item>
+          <ion-label position="stacked">Address</ion-label>
+          <ion-textarea autoGrow="true" [(ngModel)]="student.address" name="address"></ion-textarea>
+        </ion-item>
+
+        <ion-button expand="block" type="submit" color="success" class="ion-margin-top">
+          Submit
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+home.page.scss
+ion-card {
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+  border-radius: 12px;
+}
+
+ion-card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #3b5998;
+}
+
+ion-item {
+  margin-bottom: 10px;
+}
+
+ion-button {
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+home.page.ts
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: 'home.page.html',
+  styleUrls: ['home.page.scss'],
+  standalone: false,
+})
+export class HomePage {
+
+  student = {
+    name: '',
+    rollNo: '',
+    age: '',
+    dob: '',
+    city: '',
+    state: '',
+    country: '',
+    gender: '',
+    hobbies: {
+      gaming: false,
+      sports: false,
+      coding: false
+    },
+    address: ''
+  };
+
+  constructor(private router: Router) {}
+
+  goToDetails() {
+    this.router.navigate(['/details'], { queryParams: this.flattenHobbies(this.student) });
+  }
+
+  flattenHobbies(student: any) {
+    const hobbiesArray = [];
+    if (student.hobbies.gaming) hobbiesArray.push('Gaming');
+    if (student.hobbies.sports) hobbiesArray.push('Sports');
+    if (student.hobbies.coding) hobbiesArray.push('Coding');
+
+    return {
+      ...student,
+      hobbies: hobbiesArray.join(', ')
+    };
+  }
+}
+
+app-routing.module.ts
+import { NgModule } from '@angular/core';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+  },
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'details',
+    loadChildren: () => import('./details/details.module').then(m => m.DetailsPageModule)
+  },
+  {
+    path: 'details',
+    loadChildren: () => import('./details/details.module').then( m => m.DetailsPageModule)
+  }
+];
+
+@NgModule({
+  imports: [
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+  ],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+
+Details Page:
+Details.page.html
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">Student Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">Submitted Information</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list>
+        <ion-item><strong>Name:</strong>&nbsp; {{ student.name }}</ion-item>
+        <ion-item><strong>Roll No:</strong>&nbsp; {{ student.rollNo }}</ion-item>
+        <ion-item><strong>Age:</strong>&nbsp; {{ student.age }}</ion-item>
+        <ion-item><strong>DOB:</strong>&nbsp; {{ student.dob }}</ion-item>
+        <ion-item><strong>City:</strong>&nbsp; {{ student.city }}</ion-item>
+        <ion-item><strong>State:</strong>&nbsp; {{ student.state }}</ion-item>
+        <ion-item><strong>Country:</strong>&nbsp; {{ student.country }}</ion-item>
+        <ion-item><strong>Gender:</strong>&nbsp; {{ student.gender }}</ion-item>
+        <ion-item><strong>Hobbies:</strong>&nbsp; {{ student.hobbies }}</ion-item>
+        <ion-item><strong>Address:</strong>&nbsp; {{ student.address }}</ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" routerLink="/home" color="medium">
+    Back to Form
+  </ion-button>
+</ion-content>
+
+details.page.ts
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-details',
+  templateUrl: './details.page.html',
+  styleUrls: ['./details.page.scss'],
+  standalone: false,
+})
+export class DetailsPage {
+  student: any = {};
+
+  constructor(private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      this.student = params;
+    });
+  }
+}
+
