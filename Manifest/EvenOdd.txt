@@ -1,0 +1,118 @@
+index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="color-scheme" content="light dark">
+    <title>Odd or Even Checker</title>
+
+    <!-- CSS files -->
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app">
+        <h1>Odd or Even Checker</h1>
+
+        <input type="number" id="num" placeholder="Enter a number">
+        <br><br>
+        <button onclick="checkOddEven()">Check</button>
+
+        <div id="result"></div>
+    </div>
+
+    <!-- Cordova & JS -->
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
+
+index.js
+var app = {
+    initialize: function() {
+        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+    },
+    onDeviceReady: function() {
+        console.log("Cordova is ready!");
+    }
+};
+app.initialize();
+
+function checkOddEven() {
+    var n = document.getElementById("num").value;
+
+    if (n === "") {
+        alert("Please enter a number");
+        return;
+    }
+
+    n = parseInt(n);
+
+    if (n % 2 === 0) {
+        document.getElementById("result").innerHTML = "<p>" + n + " is an Even number ✅</p>";
+    } else {
+        document.getElementById("result").innerHTML = "<p>" + n + " is an Odd number 🔹</p>";
+    }
+}
+
+config.xml
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.example.oddeven" version="1.0.0"
+    xmlns="http://www.w3.org/ns/widgets"
+    xmlns:cdv="http://cordova.apache.org/ns/1.0">
+
+    <name>OddEvenApp</name>
+    <description>App to check if a number is odd or even in Cordova</description>
+    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
+        Cordova Team
+    </author>
+
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <access origin="https://trusted.cdn.com"/>
+</widget>
+
+style.css
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    margin-top: 20px;
+    color: #333;
+}
+input {
+    padding: 10px;
+    font-size: 16px;
+    width: 80%;
+    max-width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+button {
+    margin-top: 15px;
+    background-color: #6f42c1;
+    border: none;
+    color: white;
+    padding: 12px 25px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+button:hover {
+    background-color: #5a32a3;
+}
+#result {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #444;
+    font-weight: bold;
+}
